@@ -1,0 +1,28 @@
+{% extends "base_p.html" %}
+
+{% block content %}
+<div class="uk-position-center">
+    <div class="uk-container">
+        <div class="uk-card uk-card-default uk-card-body">
+            <img src="{{url_for('static', filename='imgs/logo-campanhas-ccr.svg')}}" alt="" srcset="">
+            <form>
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: user"></span>
+                        <input class="uk-input" type="text" aria-label="Not clickable icon">
+                    </div>
+                </div>
+    
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1 ">
+                        <span class="uk-form-icon" uk-icon="icon: lock"></span>
+                        <input class="uk-input" type="password" aria-label="Not clickable icon">
+                    </div>
+                </div>
+                <button class="uk-button uk-button-primary">Acessar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

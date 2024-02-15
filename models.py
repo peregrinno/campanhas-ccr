@@ -126,7 +126,7 @@ class Rifa(db.Model):
     numero = db.Column(db.Integer, nullable=False)
     disponibilidade = db.Column(db.String(15), nullable=False, default='Disponivel')
     dt_compra = db.Column(db.DateTime, nullable=True)
-    vendedor = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=True)
+    vendedor = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     num_sorteado = db.Column(db.String(3), nullable=False, default='Não')
 
     def __init__(self, id_campanha, id_pessoa, numero):
