@@ -57,6 +57,23 @@ def login_required(f):
 def login():
     return render_template('login.html')
 
+def navegacao(pagina):
+    # 'NOME DA PAGINA NO FRONT' : ['ROTA DA PAGINA', 'PAGINA ATIVA OU NÃO']
+    paginas = {
+        'Inicio': ['index', ''],
+        'Campanhas': ['',''],
+        'Rifas': ['',''],
+        'Pessoas': ['',''],
+    }
+    
+    paginas[f'{pagina}'][1] = 'uk-active'
+    """
+    print(paginas)
+    for item in paginas:
+        print(paginas[item])
+    """
+        
+    return paginas
 
 @app.route('/')
 @login_required
@@ -68,6 +85,7 @@ def index():
     
     context = {
         'user': username,
+        'navegacao': navegacao('Inicio')
     }
     
     #print(context['user'])

@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta property="og:title" content="Campanhas CCR">
-    <meta property="og:description" content="Plataforma de gerenciamento de campanhas da Comunidade Católica Restauração">
+    <meta property="og:description"
+        content="Plataforma de gerenciamento de campanhas da Comunidade Católica Restauração">
     <meta property="og:image" content="{{ url_for('static', filename='imgs/favicon-32x32.png') }}">
     <meta property="og:url" content="{{ request.url }}">
     <meta property="og:type" content="website">
@@ -18,16 +19,68 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sistema-estilos.css')}}">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <script src="{{ url_for('static', filename='js/uikit.min.js')}}"></script>
     <script src="{{ url_for('static', filename='js/uikit-icons.min.js')}}"></script>
 </head>
 
 <body>
     <main>
-        {% block content %}
+        <!-- Menu Direito -->
+        <nav class="uk-navbar-container uk-margin">
+            <div class="uk-container">
+                <div uk-navbar>
+                    <div class="uk-navbar-left">
+                        <a class="uk-navbar-toggle" href="#" uk-toggle="target: #offcanvas-push"><span
+                                uk-navbar-toggle-icon></span>
+                            <span class="uk-margin-small-left">Menu</span></a>
+                    </div>
+                    <div class="uk-navbar-right">
+                        <ul class="uk-navbar-nav">
+                            <li>
+                                <a href="#">{{ context.user }}<span uk-icon="user"></span></a>
+                                <div class="uk-navbar-dropdown">
+                                    <ul class="uk-nav uk-navbar-dropdown-nav">
+                                        <li class="uk-nav-header">Perfil</li>
+                                        <li><a href="#"><span uk-icon="cog"></span>Config</a></li>
+                                        <li class="uk-nav-header">Dados</li>
+                                        <li><a href="#"><span uk-icon="album"></span>Acessos</a></li>
+                                        <li><a href="#"><span uk-icon="history"></span>Historico</a></li>
+                                        <li class="uk-nav-divider"></li>
+                                        <li><a href="{{ url_for('logout') }}"><span uk-icon="sign-out"></span>Sair</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Navegação OffCanvas -->
+        <div id="offcanvas-push" uk-offcanvas="mode: push; overlay: true">
+            <div class="uk-offcanvas-bar uk-flex uk-flex-column">
 
-        {% endblock %}
+                <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+                <ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+                    <li class="uk-nav-header">Modulos</li>
+                    {% for item in context.navegacao %}
+                    <li class="{{context.navegacao[item][1]}}"><a
+                            href="{{ '#' if not context.navegacao[item][0] else url_for(context.navegacao[item][0]) }}"><span
+                                class="uk-margin-small-right"></span>{{item}}</a></li>
+                    {% endfor %}
+                    <li class="uk-nav-divider"></li>
+                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: info"></span> Sobre</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="uk-container">
+            {% block content %}
+
+            {% endblock %}
+        </div>
     </main>
 </body>
+
 </html>
