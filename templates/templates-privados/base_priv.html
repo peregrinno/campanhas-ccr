@@ -2,7 +2,7 @@
 <html lang="pt-br">
 
 <head>
-    <title>Campanhas CCR</title>
+    <title>Inicio</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -15,32 +15,19 @@
     <link rel="icon" href="{{ url_for('static', filename='imgs/favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/uikit.min.css')}}" />
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sistema-estilos.css')}}">
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script src="{{ url_for('static', filename='js/uikit.min.js')}}"></script>
     <script src="{{ url_for('static', filename='js/uikit-icons.min.js')}}"></script>
-    
 </head>
 
 <body>
-    <main class="uk-background-cover" data-src="{{url_for('static', filename='imgs/background-login.svg')}}"
-        data-srcset="{{url_for('static', filename='imgs/background-login.svg')}}"
-        sizes="(min-width: 650px) 650px, 99vw" uk-img style="height: 97vh;">
-
+    <main>
         {% block content %}
 
         {% endblock %}
     </main>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="{{ url_for('static', filename='js/acesso.js')}}"></script>
 </body>
-
-<footer class="uk-container uk-container-expand .uk-overlay .uk-overlay-default">
-    <h4 class="uk-text-center uk-text-top">
-        Feito com ❤️ por 
-        <a href="https://www.linkedin.com/in/luanaraujodev/" target="_blank" class="uk-text-bold" style="color: #454545; text-decoration: none;">
-            peregrinno
-        </a>
-    </h4>
-</footer>
 </html>
