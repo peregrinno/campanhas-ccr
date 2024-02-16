@@ -2,20 +2,27 @@ from flask import Flask, jsonify, render_template, request, make_response, redir
 from config import Config
 from models import db
 from functools import wraps
-
+from flask_migrate import Migrate, upgrade
 import os
+
+# Importação dos modelos (User, Campanha, Pessoa, Rifa, Sorteio)
+from models import User, Campanha, Pessoa, Rifa, Sorteio
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 db.init_app(app)
 
-# Importação dos modelos (User, Campanha, Pessoa, Rifa, Sorteio)
-from models import User, Campanha, Pessoa, Rifa, Sorteio
+migrate = Migrate(app, db)
 
-# Criação das tabelas se não existirem
-with app.app_context():
-    db.create_all()
+def run_migrations():
+    # Cria as tabelas se não existirem
+    with app.app_context():
+        db.create_all()
+
+    # Aplica as migrações ao banco de dados
+    with app.app_context():
+        upgrade()
     
 def create_default_user():
     # Verifica se o usuário já existe
@@ -63,7 +70,7 @@ def index():
         'user': username,
     }
     
-    print(context['user'])
+    #print(context['user'])
     return render_template("templates-privados/index.html", context=context)
 
 @app.route('/autenticacao', methods=['POST'])
@@ -94,4 +101,7 @@ def logout():
     return response
 
 if __name__ == '__main__':
+    # Executa as migrações antes de iniciar o aplicativo
+    run_migrations()
+    
     app.run(debug=True, port=os.getenv("PORT", default=5000))
