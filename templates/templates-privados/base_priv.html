@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sistema-estilos.css')}}">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script src="{{ url_for('static', filename='js/uikit.min.js')}}"></script>
     <script src="{{ url_for('static', filename='js/uikit-icons.min.js')}}"></script>
@@ -31,7 +33,7 @@
             <div class="uk-container">
                 <div uk-navbar>
                     <div class="uk-navbar-left">
-                        <a class="uk-navbar-toggle" href="#" uk-toggle="target: #offcanvas-push"><span
+                        <a class="uk-navbar-toggle" href="#" uk-toggle="target: #offcanvas-slide"><span
                                 uk-navbar-toggle-icon></span>
                             <span class="uk-margin-small-left">Menu</span></a>
                     </div>
@@ -58,7 +60,7 @@
             </div>
         </nav>
         <!-- Navegação OffCanvas -->
-        <div id="offcanvas-push" uk-offcanvas="mode: push; overlay: true">
+        <div id="offcanvas-slide" uk-offcanvas="mode: push; overlay: true">
             <div class="uk-offcanvas-bar uk-flex uk-flex-column">
 
                 <button class="uk-offcanvas-close" type="button" uk-close></button>
@@ -81,6 +83,7 @@
             {% endblock %}
         </div>
     </main>
+    <script src="{{ url_for('static', filename='js/pessoas.js')}}"></script>
 </body>
 
 </html>

@@ -3,17 +3,27 @@ from config import Config
 from models import db
 from functools import wraps
 from flask_migrate import Migrate, upgrade
+from flask_cors import CORS
 import os
 
 # Importação dos modelos (User, Campanha, Pessoa, Rifa, Sorteio)
 from models import User, Campanha, Pessoa, Rifa, Sorteio
 
 app = Flask(__name__)
+
 app.config.from_object(Config)
 
 db.init_app(app)
 
+CORS(app) 
+
 migrate = Migrate(app, db)
+
+def paginate(query, page=1, per_page=20):
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+    items = query.slice(start_index, end_index).all()
+    return items
 
 def run_migrations():
     # Cria as tabelas se não existirem
@@ -53,17 +63,13 @@ def login_required(f):
 
     return decorated_function
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
 def navegacao(pagina):
     # 'NOME DA PAGINA NO FRONT' : ['ROTA DA PAGINA', 'PAGINA ATIVA OU NÃO']
     paginas = {
         'Inicio': ['index', ''],
         'Campanhas': ['',''],
         'Rifas': ['',''],
-        'Pessoas': ['',''],
+        'Pessoas': ['pag_pessoas',''],
     }
     
     paginas[f'{pagina}'][1] = 'uk-active'
@@ -75,8 +81,12 @@ def navegacao(pagina):
         
     return paginas
 
-@app.route('/')
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
 @login_required
+@app.route('/')
 def index():
     # Cria o usuário padrão
     create_default_user()
@@ -109,7 +119,7 @@ def authenticate():
     else:
         return jsonify({'success': False, 'message': 'Login falhou. Verifique suas credenciais.'})
 
-
+@login_required
 @app.route('/logout')
 def logout():
     # Limpa os cookies de autenticação e redireciona para a página de login
@@ -118,8 +128,70 @@ def logout():
     response.set_cookie('username', '', expires=0)
     return response
 
+@login_required
+@app.route('/pag_pessoas')
+def pag_pessoas():
+    username = request.cookies.get('username')
+    
+    context = {
+       'user': username,
+       'navegacao': navegacao('Pessoas')
+    }
+    
+    return render_template('templates-privados/pessoas.html', context=context)
+
+@login_required
+@app.route('/pessoas', methods=['GET'])
+def pessoas():
+    # Obtem os parâmetros da consulta da URL
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=20, type=int)
+    
+    pessoas = paginate(Pessoa.query, page, per_page)
+
+    # Converte as instâncias da classe Pessoa para dicionários usando o método to_dict
+    pessoas_serializadas = [pessoa.to_dict() for pessoa in pessoas]
+
+    # Informações sobre a paginação
+    total_items = Pessoa.query.count()
+    total_pages = (total_items + per_page - 1) // per_page
+
+    paginacao = {
+        'has_prev': page > 1,
+        'has_next': page < total_pages,
+        'current_page': page,
+        'prev_page': page - 1 if page > 1 else None,
+        'next_page': page + 1 if page < total_pages else None,
+        'pages': [i for i in range(1, total_pages + 1)],
+    }
+
+    # Retorna os dados e informações de paginação em formato JSON
+    return jsonify({'pessoas': pessoas_serializadas, 'paginacao': paginacao})
+
+@login_required
+@app.route('/add_pessoa', methods=['POST'])
+def add_pessoa():
+    data = request.get_json()  # Obtém os dados do JSON na solicitação
+
+    # Cria uma nova instância da classe Pessoa
+    nova_pessoa = Pessoa(
+        nome=data['nome'],
+        telefone=data.get('telefone'),
+        cidade=data.get('cidade'),
+        estado=data.get('estado', 'Pernambuco'),  # Define um valor padrão se não fornecido
+        pais=data.get('pais', 'Brasil')  # Define um valor padrão se não fornecido
+    )
+
+    # Adiciona a nova pessoa ao banco de dados
+    db.session.add(nova_pessoa)
+    db.session.commit()
+
+    return jsonify({'message': 'Pessoa adicionada com sucesso!'}), 201
+
 if __name__ == '__main__':
     # Executa as migrações antes de iniciar o aplicativo
     run_migrations()
     
-    app.run(debug=True, port=os.getenv("PORT", default=5000))
+    app.run(debug=True, port=os.getenv("PORT", default=5000), use_reloader=True)
+    
+    

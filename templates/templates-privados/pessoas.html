@@ -1,0 +1,144 @@
+{% extends 'templates-privados/base_priv.html' %}
+
+{% block content %}
+<h1>Pessoas</h1>
+
+<!-- Paginação -->
+<ul id="pagina-pessoas" class="uk-pagination" uk-margin></ul>
+
+<!-- Tabela de pessoas -->
+<table id="tabela-pessoas" class="uk-table uk-table-justify uk-table-divider">
+  <thead>
+    <tr>
+      <th class="uk-table-expand">Nome</th>
+      <th class="uk-table-shrink">Telefone</th>
+      <th class="uk-table-shrink">Cidade</th>
+      <th class="uk-table-shrink">Ação</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Populada via API -->
+  </tbody>
+</table>
+
+<!-- Btn Nova Pessoa -->
+<a href="#modal-overflow" uk-toggle
+  class="uk-margin uk-button uk-button-medium uk-position-fixed uk-position-large uk-position-bottom-right"
+  style="border-radius: 50px; background: #e0e0e0; box-shadow:  20px 20px 60px #bebebe,-20px -20px 60px #ffffff;"><span
+    uk-icon="icon: plus-circle"></span><b> Novo</b></a>
+
+<!-- Modal de Nova Pessoa -->
+<div id="modal-overflow" uk-modal>
+  <div class="uk-modal-dialog">
+
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title">Nova pessoa</h2>
+    </div>
+
+    <div class="uk-modal-body" uk-overflow-auto>
+      <form class="uk-grid-small" uk-grid style="margin-bottom: 10px;">
+        <div class="uk-width-1-1">
+          <label class="uk-form-label" for="input-nome">Nome</label>
+          <input class="uk-input" type="text" placeholder="Nome" aria-label="Nome" id="input-nome" name="input-nome"
+            required>
+        </div>
+        <div class="uk-width-1-4@s">
+          <label class="uk-form-label" for="input-telefone">Telefone</label>
+          <input class="uk-input" type="number" placeholder="Telefone" aria-label="Telefone" id="input-telefone"
+            name="input-telefone">
+        </div>
+        <div class="uk-width-1-4@s">
+          <div class="uk-form-controls">
+            <label class="uk-form-label" for="input-cidade">Cidade</label>
+            <input class="uk-input" type="text" placeholder="Cidade" aria-label="Cidade" id="input-cidade"
+              name="input-cidade">
+          </div>
+        </div>
+        <div class="uk-width-1-4@s">
+          <div class="uk-form-controls">
+            <label class="uk-form-label" for="slct-estado">Estado</label>
+            <select class="uk-select" id="slct-estado" name="slct-estado">
+              <option value="AC">AC</option>
+              <option value="AL">AL</option>
+              <option value="AP">AP</option>
+              <option value="AM">AM</option>
+              <option value="BA">BA</option>
+              <option value="CE">CE</option>
+              <option value="DF">DF</option>
+              <option value="ES">ES</option>
+              <option value="GO">GO</option>
+              <option value="MA">MA</option>
+              <option value="MT">MT</option>
+              <option value="MS">MS</option>
+              <option value="MG">MG</option>
+              <option value="PA">PA</option>
+              <option value="PB">PB</option>
+              <option value="PR">PR</option>
+              <option selected value="PE">PE</option>
+              <option value="PI">PI</option>
+              <option value="RJ">RJ</option>
+              <option value="RN">RN</option>
+              <option value="RS">RS</option>
+              <option value="RO">RO</option>
+              <option value="RR">RR</option>
+              <option value="SC">SC</option>
+              <option value="SP">SP</option>
+              <option value="SE">SE</option>
+              <option value="TO">TO</option>
+            </select>
+          </div>
+        </div>
+        <div class="uk-width-1-4@s">
+          <div class="uk-form-controls">
+            <label class="uk-form-label" for="slct-pais">Pais</label>
+            <select class="uk-select" id="slct-pais" name="slct-pais">
+              <option selected value="BR">Brasil</option>
+              <option value="US">Estados Unidos</option>
+              <option value="CN">China</option>
+              <option value="IN">Índia</option>
+              <option value="JP">Japão</option>
+              <option value="RU">Rússia</option>
+              <option value="DE">Alemanha</option>
+              <option value="FR">França</option>
+              <option value="GB">Reino Unido</option>
+              <option value="IT">Itália</option>
+              <option value="CA">Canadá</option>
+              <option value="AU">Austrália</option>
+              <option value="MX">México</option>
+              <option value="BR">Brasil</option>
+              <option value="AR">Argentina</option>
+              <option value="CL">Chile</option>
+              <option value="CO">Colômbia</option>
+              <option value="PE">Peru</option>
+              <option value="VE">Venezuela</option>
+              <option value="ES">Espanha</option>
+              <option value="PT">Portugal</option>
+              <option value="ZA">África do Sul</option>
+              <option value="NG">Nigéria</option>
+              <option value="EG">Egito</option>
+              <option value="SA">Arábia Saudita</option>
+              <option value="ID">Indonésia</option>
+              <option value="JP">Japão</option>
+              <option value="KR">Coreia do Sul</option>
+              <option value="TH">Tailândia</option>
+              <option value="VN">Vietnã</option>
+              <option value="TR">Turquia</option>
+              <option value="IR">Irã</option>
+              <option value="IQ">Iraque</option>
+            </select>
+          </div>
+        </div>
+        <button class="uk-button uk-button-primary uk-modal-close" type="button" onclick="NovaPessoa();">Salvar</button>
+      </form>
+    </div>
+
+    <div class="uk-modal-footer uk-text-right">
+      <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
