@@ -1,3 +1,5 @@
+var pessoaID;
+
 // Função para carregar e popular a tabela via AJAX
 function carregarPessoas() {
     $.ajax({
@@ -5,7 +7,7 @@ function carregarPessoas() {
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-            console.log(data);
+            //console.log(data);
             // Limpar a tabela antes de popular com os novos dados
             $('#tabela-pessoas tbody').empty();
 
@@ -15,16 +17,18 @@ function carregarPessoas() {
                 data.pessoas.forEach(function (pessoa) {
                     $('#tabela-pessoas tbody').append(`
             <tr>
+              <td>${pessoa.id}</td>
               <td>${pessoa.nome}</td>
-              <td>${pessoa.telefone}</td>
+              <td><a href="https://api.whatsapp.com/send?phone=55${pessoa.telefone}&text=Olá, ${pessoa.nome}! Tudo bem?" target=_blank uk-icon="icon: whatsapp"></a> ${pessoa.telefone}</td>
               <td>${pessoa.cidade}</td>
-              <td><button class="uk-icon-link uk-margin-small-right" uk-icon="file-edit"></button></td>
+              <td><button class="uk-icon-link uk-margin-small-right" uk-icon="file-edit" onclick="detalhePessoa(${pessoa.id})"></button></td>
             </tr>
           `);
                 });
             } else {
                 console.warn('Array de pessoas está vazio ou ausente na resposta.');
             }
+            atualizarPaginacao(data.paginacao);
         },
         error: function (error) {
             console.error('Erro ao obter pessoas via AJAX:', error);
@@ -112,8 +116,123 @@ function NovaPessoa() {
     });
 }
 
+function detalhePessoa(id) {
+    // Faça a requisição AJAX para obter os detalhes da pessoa
+    $.ajax({
+      type: 'GET',
+      url: '/pessoa/' + id, 
+      dataType: 'json',
+      success: function (data) {
+        pessoaID = id;
+        //console.log(data);
+        // Preencha os campos do modal com os dados recebidos
+        $('#input-nome-detalhes').val(data.nome);
+        $('#input-telefone-detalhes').val(data.telefone);
+        $('#input-cidade-detalhes').val(data.cidade);
+        $('#slct-estado-detalhes').val(data.estado);
+        $('#slct-pais-detalhes').val(data.pais);        
+  
+        // Abra o modal de detalhes da pessoa
+        UIkit.modal('#modal-detalhes-pessoa').show();
+      },
+      error: function (error) {
+        console.error('Erro ao obter detalhes da pessoa via AJAX:', error);
+      }
+    });
+}
+
+function updatePessoa() {
+    // Obtenha os valores do formulário
+    var id = pessoaID;
+    var nome = $('#input-nome-detalhes').val();
+    var telefone = $('#input-telefone-detalhes').val();
+    var cidade = $('#input-cidade-detalhes').val();
+    var estado = $('#slct-estado-detalhes').val();
+    var pais = $('#slct-pais-detalhes').val();
+
+    // Crie um objeto com os dados do formulário
+    var formData = {
+        id: id,
+        nome: nome,
+        telefone: telefone,
+        cidade: cidade,
+        estado: estado,
+        pais: pais
+    };
+
+    // Faça a requisição AJAX
+    $.ajax({
+        type: 'POST',
+        url: '/updt_pessoa/' + id,
+        data: JSON.stringify(formData),  // Converte os dados para JSON
+        contentType: 'application/json;charset=UTF-8',  // Define o cabeçalho Content-Type
+        success: function (response) {
+            // Exibe um SweetAlert de sucesso se a requisição for bem-sucedida
+            Swal.fire({
+                icon: 'success',
+                title: 'Sucesso!',
+                text: 'Pessoa atualizada com sucesso.'
+            });
+
+            //Recarrega pessoas
+            carregarPessoas();
+        },
+        error: function (error) {
+            // Exibe um SweetAlert de erro se a requisição falhar
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro!',
+                text: 'Ocorreu um erro ao atualizar a pessoa. Tente novamente mais tarde.'
+            });
+        }
+    });
+}
+
 // Chama a função ao carregar a página
 $(document).ready(function () {
     carregarPessoas();
 });
+
+// Adicione um evento de input para detectar mudanças no campo de busca
+$('#searchPessoa').on('input', function() {
+    // Obtém o valor do campo de busca
+    var searchTerm = $(this).val();
+
+    // Chama a função para carregar pessoas com o termo de busca
+    carregarPessoasComBusca(searchTerm);
+});
+
+// Função para carregar e popular a tabela via AJAX com parâmetro de busca
+function carregarPessoasComBusca(searchTerm) {
+    $.ajax({
+        url: '/buscar_pessoas?search=' + searchTerm,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            // Limpar a tabela antes de popular com os novos dados
+            $('#tabela-pessoas tbody').empty();
+
+            // Verificar se a resposta contém o array 'pessoas'
+            if ('pessoas' in data && Array.isArray(data.pessoas)) {
+                // Popula a tabela com os dados recebidos
+                data.pessoas.forEach(function (pessoa) {
+                    $('#tabela-pessoas tbody').append(`
+                        <tr>
+                            <td>${pessoa.id}</td>
+                            <td>${pessoa.nome}</td>
+                            <td><a href="https://api.whatsapp.com/send?phone=55${pessoa.telefone}&text=Olá, ${pessoa.nome}! Tudo bem?" target="_blank" uk-icon="icon: whatsapp"></a> ${pessoa.telefone}</td>
+                            <td>${pessoa.cidade}</td>
+                            <td><button class="uk-icon-link uk-margin-small-right" uk-icon="file-edit" onclick="detalhePessoa(${pessoa.id})"></button></td>
+                        </tr>
+                    `);
+                });
+            } else {
+                console.warn('Array de pessoas está vazio ou ausente na resposta.');
+            }
+        },
+        error: function (error) {
+            console.error('Erro ao obter pessoas via AJAX:', error);
+        }
+    });
+}
 

@@ -19,7 +19,7 @@ CORS(app)
 
 migrate = Migrate(app, db)
 
-def paginate(query, page=1, per_page=20):
+def paginate(query, page=1, per_page=10):
     start_index = (page - 1) * per_page
     end_index = start_index + per_page
     items = query.slice(start_index, end_index).all()
@@ -145,7 +145,7 @@ def pag_pessoas():
 def pessoas():
     # Obtem os parâmetros da consulta da URL
     page = request.args.get('page', default=1, type=int)
-    per_page = request.args.get('per_page', default=20, type=int)
+    per_page = request.args.get('per_page', default=10, type=int)
     
     pessoas = paginate(Pessoa.query, page, per_page)
 
@@ -168,6 +168,20 @@ def pessoas():
     # Retorna os dados e informações de paginação em formato JSON
     return jsonify({'pessoas': pessoas_serializadas, 'paginacao': paginacao})
 
+@app.route('/buscar_pessoas', methods=['GET'])
+def buscar_pessoas():
+    # Obtenha o termo de busca da URL
+    search_term = request.args.get('search', default='', type=str)
+
+    # Use o filtro para pesquisar pessoas com base no termo de busca
+    query = Pessoa.query.filter(Pessoa.nome.ilike(f'%{search_term}%'))
+
+    # Converte as instâncias da classe Pessoa para dicionários usando o método to_dict
+    pessoas_serializadas = [pessoa.to_dict() for pessoa in query]
+
+    # Retorna os dados encontrados em formato JSON
+    return jsonify({'pessoas': pessoas_serializadas})
+
 @login_required
 @app.route('/add_pessoa', methods=['POST'])
 def add_pessoa():
@@ -187,6 +201,34 @@ def add_pessoa():
     db.session.commit()
 
     return jsonify({'message': 'Pessoa adicionada com sucesso!'}), 201
+
+@login_required
+@app.route('/pessoa/<int:id>', methods=['GET'])
+def pessoa(id):
+    pessoa = Pessoa.query.get_or_404(id)
+    #print(pessoa)
+    return jsonify(pessoa.to_dict())
+
+@login_required
+@app.route('/updt_pessoa/<int:id>', methods=['POST'])
+def updt_pessoa(id):
+    pessoa = Pessoa.query.get_or_404(id)
+    
+    #Dados atualizados
+    att = request.get_json()
+    
+    #Atribuindo dados novos
+    pessoa.nome = att['nome']
+    pessoa.telefone = att['telefone']
+    pessoa.cidade = att['cidade']
+    pessoa.estado = att['estado']
+    pessoa.pais = att['pais']
+    
+    #Confirmando transação
+    db.session.commit()
+    
+    #print(pessoa)
+    return jsonify({'message': 'Pessoa atualizada com sucesso!'}), 201
 
 if __name__ == '__main__':
     # Executa as migrações antes de iniciar o aplicativo
