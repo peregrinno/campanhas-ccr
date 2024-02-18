@@ -1,7 +1,7 @@
 ---
-title: Campaign manager for Churches and Communities.
-description: Application developed with Python, Flask and MySQL, hosted on Railway but can be easily configured for container environments like Docker!
-tags:
+Title: Campaign manager for Churches and Communities.
+Description: Application developed with Python, Flask and MySQL, hosted on Railway but can be easily configured for container environments like Docker!
+Tags:
   - python
   - flask
   - MySQL
