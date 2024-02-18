@@ -57,7 +57,7 @@ def login_required(f):
                 # Adiciona o usuário à requisição para ser acessado nas rotas protegidas
                 request.user = user
                 return f(*args, **kwargs)
-
+            
         # Redireciona para a página de login se o usuário não estiver autenticado
         return redirect(url_for('login'))
 
@@ -85,8 +85,9 @@ def navegacao(pagina):
 def login():
     return render_template('login.html')
 
-@login_required
+
 @app.route('/')
+@login_required
 def index():
     # Cria o usuário padrão
     create_default_user()
@@ -119,8 +120,8 @@ def authenticate():
     else:
         return jsonify({'success': False, 'message': 'Login falhou. Verifique suas credenciais.'})
 
-@login_required
 @app.route('/logout')
+@login_required
 def logout():
     # Limpa os cookies de autenticação e redireciona para a página de login
     response = make_response(redirect(url_for('login')))
@@ -128,8 +129,8 @@ def logout():
     response.set_cookie('username', '', expires=0)
     return response
 
-@login_required
 @app.route('/pag_pessoas')
+@login_required
 def pag_pessoas():
     username = request.cookies.get('username')
     
@@ -140,8 +141,8 @@ def pag_pessoas():
     
     return render_template('templates-privados/pessoas.html', context=context)
 
-@login_required
 @app.route('/pessoas', methods=['GET'])
+@login_required
 def pessoas():
     # Obtem os parâmetros da consulta da URL
     page = request.args.get('page', default=1, type=int)
@@ -169,6 +170,7 @@ def pessoas():
     return jsonify({'pessoas': pessoas_serializadas, 'paginacao': paginacao})
 
 @app.route('/buscar_pessoas', methods=['GET'])
+@login_required
 def buscar_pessoas():
     # Obtenha o termo de busca da URL
     search_term = request.args.get('search', default='', type=str)
@@ -182,8 +184,8 @@ def buscar_pessoas():
     # Retorna os dados encontrados em formato JSON
     return jsonify({'pessoas': pessoas_serializadas})
 
-@login_required
 @app.route('/add_pessoa', methods=['POST'])
+@login_required
 def add_pessoa():
     data = request.get_json()  # Obtém os dados do JSON na solicitação
 
@@ -202,15 +204,15 @@ def add_pessoa():
 
     return jsonify({'message': 'Pessoa adicionada com sucesso!'}), 201
 
-@login_required
 @app.route('/pessoa/<int:id>', methods=['GET'])
+@login_required
 def pessoa(id):
     pessoa = Pessoa.query.get_or_404(id)
     #print(pessoa)
     return jsonify(pessoa.to_dict())
 
-@login_required
 @app.route('/updt_pessoa/<int:id>', methods=['POST'])
+@login_required
 def updt_pessoa(id):
     pessoa = Pessoa.query.get_or_404(id)
     
