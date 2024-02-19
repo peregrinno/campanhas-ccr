@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, render_template, request, make_response, redirect, url_for
+from flask_migrate import Migrate, upgrade
+from flask_cors import CORS
 from config import Config
 from models import db
 from functools import wraps
-from flask_migrate import Migrate, upgrade
-from flask_cors import CORS
+from sqlalchemy import desc
 import os
 
 # Importação dos modelos (User, Campanha, Pessoa, Rifa, Sorteio)
@@ -148,7 +149,7 @@ def pessoas():
     page = request.args.get('page', default=1, type=int)
     per_page = request.args.get('per_page', default=10, type=int)
     
-    pessoas = paginate(Pessoa.query, page, per_page)
+    pessoas = paginate(Pessoa.query.order_by(desc(Pessoa.id)), page, per_page)
 
     # Converte as instâncias da classe Pessoa para dicionários usando o método to_dict
     pessoas_serializadas = [pessoa.to_dict() for pessoa in pessoas]

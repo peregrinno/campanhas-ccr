@@ -1,9 +1,10 @@
 var pessoaID;
+var page;
 
 // Função para carregar e popular a tabela via AJAX
-function carregarPessoas() {
+function carregarPessoas(page) {
     $.ajax({
-        url: '/pessoas?page=${page}',
+        url: '/pessoas?page='+ page,
         type: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -16,7 +17,7 @@ function carregarPessoas() {
                 // Popula a tabela com os dados recebidos
                 data.pessoas.forEach(function (pessoa) {
                     $('#tabela-pessoas tbody').append(`
-            <tr>
+            <tr data-aos="fade-right">
               <td>${pessoa.id}</td>
               <td>${pessoa.nome}</td>
               <td><a href="https://api.whatsapp.com/send?phone=55${pessoa.telefone}&text=Olá, ${pessoa.nome}! Tudo bem?" target=_blank uk-icon="icon: whatsapp"></a> ${pessoa.telefone}</td>
@@ -103,7 +104,7 @@ function NovaPessoa() {
             });
 
             //Recarrega pessoas
-            carregarPessoas();
+            carregarPessoas(1);
         },
         error: function (error) {
             // Exibe um SweetAlert de erro se a requisição falhar
@@ -175,7 +176,7 @@ function updatePessoa() {
             });
 
             //Recarrega pessoas
-            carregarPessoas();
+            carregarPessoas(1);
         },
         error: function (error) {
             // Exibe um SweetAlert de erro se a requisição falhar
@@ -190,7 +191,7 @@ function updatePessoa() {
 
 // Chama a função ao carregar a página
 $(document).ready(function () {
-    carregarPessoas();
+    carregarPessoas(1);
 });
 
 // Adicione um evento de input para detectar mudanças no campo de busca

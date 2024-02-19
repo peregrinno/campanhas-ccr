@@ -15,6 +15,7 @@
 
     <link rel="icon" href="{{ url_for('static', filename='imgs/favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/uikit.min.css')}}" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sistema-estilos.css')}}">
 
@@ -24,6 +25,7 @@
 
     <script src="{{ url_for('static', filename='js/uikit.min.js')}}"></script>
     <script src="{{ url_for('static', filename='js/uikit-icons.min.js')}}"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
 
 <body>
@@ -84,6 +86,11 @@
         </div>
     </main>
     <script src="{{ url_for('static', filename='js/pessoas.js')}}"></script>
+    {% block script %}
+    <script>
+        AOS.init();
+    </script>
+    {% endblock%}
 </body>
 
 </html>

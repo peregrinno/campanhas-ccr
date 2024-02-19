@@ -54,7 +54,9 @@ A função to_dict é um exemplo de como você pode converter o objeto User em u
 
 class Campanha(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    criador_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     nome = db.Column(db.String(100), nullable=False)
+    dt_criacao = db.Column(db.Date, nullable=False)
     dt_inicio = db.Column(db.Date, nullable=False)
     dt_fim = db.Column(db.Date, nullable=False)
     meta = db.Column(db.Float, nullable=False)
