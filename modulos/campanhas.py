@@ -49,7 +49,7 @@ def buscar_campanhas():
     search_term = request.args.get('search', default='', type=str)
 
     # Use o filtro para pesquisar campanhas com base no termo de busca
-    query = Campanha.query.filter(campanha.nome.ilike(f'%{search_term}%'))
+    query = Campanha.query.filter(Campanha.nome.ilike(f'%{search_term}%'))
 
     # Converte as instâncias da classe campanha para dicionários usando o método to_dict
     campanhas_serializadas = [campanha.to_dict() for campanha in query]
@@ -95,16 +95,18 @@ def campanha(id):
 @login_required
 def updt_campanha(id):
     campanha = Campanha.query.get_or_404(id)
-    
+
     #Dados atualizados
     att = request.get_json()
-    
+       
+    #print(att)
+     
     #Atribuindo dados novos
     campanha.nome = att['nome']
-    campanha.telefone = att['telefone']
-    campanha.cidade = att['cidade']
-    campanha.estado = att['estado']
-    campanha.pais = att['pais']
+    campanha.dt_inicio = att['dt_inicio']
+    campanha.dt_fim = att['dt_fim']
+    campanha.meta = float(att['meta'].replace(',',''))
+    campanha.tipo = att['tipo']
     
     #Confirmando transação
     db.session.commit()

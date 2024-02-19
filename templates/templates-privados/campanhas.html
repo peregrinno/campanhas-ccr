@@ -15,11 +15,11 @@
 </div>
 
 <!-- Tabela de campanhas -->
-<table id="tabela-campanhas" class="uk-table uk-table-justify uk-table-divider">
+<table id="tabela-campanhas" class="uk-table uk-table-justify uk-table-divider uk-table-responsive uk-table-striped">
   <thead>
     <tr>
       <th class="uk-table-shrink">#</th>
-      <th class="uk-table-shrink">Nome</th>
+      <th class="uk-table-shrink">Campanha</th>
       <th class="uk-table-shrink">Meta</th>
       <th class="uk-table-shrink">Criador</th>
       <th class="uk-table-shrink">Criação</th>
@@ -103,31 +103,23 @@
           <label class="uk-form-label" for="input-nome-detalhes">Nome</label>
           <input class="uk-input" type="text" id="input-nome-detalhes" name="input-nome-detalhes">
         </div>
-        <div class="uk-width-1-4@s">
-          <label class="uk-form-label" for="input-telefone-detalhes">Telefone</label>
-          <input class="uk-input" type="number" placeholder="Telefone" aria-label="Telefone"
-            id="input-telefone-detalhes" name="input-telefone-detalhes">
+        <div class="uk-width-1-2@s">
+          <label class="uk-form-label" for="input-dt-inicio-detalhes">Data de início</label>
+          <input class="uk-input" type="date" aria-label="Clickable date" id="input-dt-inicio-detalhes" name="input-dt-inicio-detalhes">
         </div>
-        <div class="uk-width-1-4@s">
-          <div class="uk-form-controls">
-            <label class="uk-form-label" for="input-cidade-detalhes">Cidade</label>
-            <input class="uk-input" type="text" placeholder="Cidade" aria-label="Cidade" id="input-cidade-detalhes"
-              name="input-cidade-detalhes">
-          </div>
+        <div class="uk-width-1-2@s">
+          <label class="uk-form-label" for="input-dt-fim-detalhes">Data de fim</label>
+          <input class="uk-input" type="date" aria-label="Clickable date" id="input-dt-fim-detalhes" name="input-dt-fim-detalhes">
         </div>
-        <div class="uk-width-1-4@s">
-          <div class="uk-form-controls">
-            <label class="uk-form-label" for="slct-estado-detalhes">Estado</label>
-            <select class="uk-select" id="slct-estado-detalhes" name="slct-estado-detalhes">
-
-            </select>
-          </div>
+        <div class="uk-width-1-2@s">
+          <label class="uk-form-label" for="input-meta-detalhes">Meta</label>
+          <input class="uk-input" type="text" aria-label="Clickable date" id="input-meta-detalhes" name="input-meta-detalhes">
         </div>
-        <div class="uk-width-1-4@s">
+        <div class="uk-width-1-2@s">
           <div class="uk-form-controls">
-            <label class="uk-form-label" for="slct-pais-detalhes">Pais</label>
-            <select class="uk-select" id="slct-pais-detalhes" name="slct-pais-detalhes">
-
+            <label class="uk-form-label" for="slct-tipo-detalhes">Tipo</label>
+            <select class="uk-select" id="slct-tipo-detalhes" name="slct-tipo-detalhes">
+              <!-- Preenchido via AJAX -->
             </select>
           </div>
         </div>
@@ -135,11 +127,12 @@
     </div>
 
     <div class="uk-modal-footer uk-text-right">
-      <button class="uk-button uk-button-primary" type="button" onclick="updateCampanha()">Salvar</button>
+      <button class="uk-button uk-button-primary uk-modal-close" type="button" onclick="updateCampanha()">Salvar</button>
       <button class="uk-button uk-button-default uk-modal-close" type="button">Fechar</button>
     </div>
 
   </div>
 </div>
+
 
 {% endblock %}

@@ -11,7 +11,7 @@ function carregarCampanhas(page) {
             //console.log(data);
             // Limpar a tabela antes de popular com os novos dados
             $('#tabela-campanhas tbody').empty();
-
+            console.log(data.campanhas);
             // Verificar se a resposta contém o array 'campanhas'
             if ('campanhas' in data && Array.isArray(data.campanhas)) {
                 // Popula a tabela com os dados recebidos
@@ -23,9 +23,9 @@ function carregarCampanhas(page) {
               <td>${parseFloat(campanha.meta).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
               <td>${campanha.criador}</td>
               <td>${new Date(campanha.dt_criacao).toLocaleString()}</td>
-              <td>${new Date(campanha.dt_inicio).toLocaleDateString()}</td>
-              <td>${new Date(campanha.dt_fim).toLocaleDateString()}</td>
-              <td><button class="uk-icon-link uk-margin-small-right" uk-icon="file-edit" onclick="detalheCampanha(${campanha.id})"></button></td>
+              <td>${new Date(`${campanha.dt_inicio}T23:59:59Z`).toLocaleDateString()}</td>
+              <td>${new Date(`${campanha.dt_fim}T23:59:59Z`).toLocaleDateString()}</td>
+              <td class="uk-margin"><button class="uk-icon-link uk-margin-small-right" uk-icon="file-edit" onclick="detalheCampanha(${campanha.id})"></button></td>
             </tr>
           `);
                 });
@@ -48,7 +48,7 @@ function atualizarPaginacao(paginacao) {
     // Adiciona o botão de página anterior
     if (paginacao.has_prev) {
         $('#pagina-campanhas').append(`
-        <li><a href="#" onclick="carregarcampanhas(${paginacao.prev_page})"><span uk-pagination-previous></span></a></li>
+        <li><a href="#" onclick="carregarCampanhas(${paginacao.prev_page})"><span uk-pagination-previous></span></a></li>
       `);
     } else {
         $('#pagina-campanhas').append('<li class="uk-disabled"><span uk-pagination-previous></span></li>');
@@ -61,7 +61,7 @@ function atualizarPaginacao(paginacao) {
         } else if (page === paginacao.current_page) {
             $('#pagina-campanhas').append(`<li class="uk-active"><span>${page}</span></li>`);
         } else {
-            $('#pagina-campanhas').append(`<li><a href="#" onclick="carregarcampanhas(${page})">${page}</a></li>`);
+            $('#pagina-campanhas').append(`<li><a href="#" onclick="carregarCampanhas(${page})">${page}</a></li>`);
         }
     });
 
@@ -133,10 +133,10 @@ function detalheCampanha(id) {
             //console.log(data);
             // Preencha os campos do modal com os dados recebidos
             $('#input-nome-detalhes').val(data.nome);
-            $('#input-telefone-detalhes').val(data.telefone);
-            $('#input-cidade-detalhes').val(data.cidade);
-            $('#slct-estado-detalhes').val(data.estado);
-            $('#slct-pais-detalhes').val(data.pais);
+            $('#input-dt-inicio-detalhes').val(data.dt_inicio);
+            $('#input-dt-fim-detalhes').val(data.dt_fim);
+            $('#input-meta-detalhes').val(data.meta);
+            $('#slct-tipo-detalhes').val(data.tipo);
 
             // Abra o modal de detalhes da campanha
             UIkit.modal('#modal-detalhes-campanha').show();
@@ -148,25 +148,25 @@ function detalheCampanha(id) {
 }
 
 function updateCampanha() {
-    // Obtenha os valores do formulário
     var id = campanhaID;
     var nome = $('#input-nome-detalhes').val();
-    var telefone = $('#input-telefone-detalhes').val();
-    var cidade = $('#input-cidade-detalhes').val();
-    var estado = $('#slct-estado-detalhes').val();
-    var pais = $('#slct-pais-detalhes').val();
+    var dtInicio = $('#input-dt-inicio-detalhes').val();
+    var dtFim = $('#input-dt-fim-detalhes').val();
+    var meta = $('#input-meta-detalhes').val();
+    var tipo = $('#slct-tipo-detalhes').val();
 
-    // Crie um objeto com os dados do formulário
+    // Cria um objeto com os dados do formulário
     var formData = {
         id: id,
         nome: nome,
-        telefone: telefone,
-        cidade: cidade,
-        estado: estado,
-        pais: pais
+        dt_inicio: dtInicio,
+        dt_fim: dtFim,
+        meta: meta,
+        tipo: tipo
     };
 
-    // Faça a requisição AJAX
+
+    // Faz a requisição AJAX
     $.ajax({
         type: 'POST',
         url: '/campanhas/updt_campanha/' + id,
@@ -177,7 +177,7 @@ function updateCampanha() {
             Swal.fire({
                 icon: 'success',
                 title: 'Sucesso!',
-                text: 'campanha atualizada com sucesso.'
+                text: 'Campanha atualizada com sucesso.'
             });
 
             //Recarrega campanhas
@@ -197,10 +197,16 @@ function updateCampanha() {
 // Chama a função ao carregar a página
 $(document).ready(function () {
     carregarCampanhas(1);
-    var cleave = new Cleave('#input-meta', {
+    var cleaveMeta = new Cleave('#input-meta', {
         numeral: true,
         numeralThousandsGroupStyle: 'thousand'
     });
+    
+    var cleaveMetaDetalhes = new Cleave('#input-meta-detalhes', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand'
+    });
+    
 });
 
 // Adicione um evento de input para detectar mudanças no campo de busca
@@ -230,9 +236,12 @@ function carregarCampanhasComBusca(searchTerm) {
                         <tr>
                             <td>${campanha.id}</td>
                             <td>${campanha.nome}</td>
-                            <td><a href="https://api.whatsapp.com/send?phone=55${campanha.telefone}&text=Olá, ${campanha.nome}! Tudo bem?" target="_blank" uk-icon="icon: whatsapp"></a> ${campanha.telefone}</td>
-                            <td>${campanha.cidade}</td>
-                            <td><button class="uk-icon-link uk-margin-small-right" uk-icon="file-edit" onclick="detalhecampanha(${campanha.id})"></button></td>
+                            <td>${parseFloat(campanha.meta).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                            <td>${campanha.criador}</td>
+                            <td>${new Date(campanha.dt_criacao).toLocaleString()}</td>
+                            <td>${new Date(`${campanha.dt_inicio}T23:59:59Z`).toLocaleDateString()}</td>
+                            <td>${new Date(`${campanha.dt_fim}T23:59:59Z`).toLocaleDateString()}</td>
+                            <td class="uk-margin"><button class="uk-icon-link uk-margin-small-right" uk-icon="file-edit" onclick="detalheCampanha(${campanha.id})"></button></td>
                         </tr>
                     `);
                 });
