@@ -1,12 +1,14 @@
 ---
-title: Flask
-description: A popular minimal server framework for Python
-tags:
+Title: Campaign manager for Churches and Communities.
+Description: Application developed with Python, Flask and MySQL, hosted on Railway but can be easily configured for container environments like Docker!
+Tags:
   - python
   - flask
+  - MySQL
+  - UIKit
 ---
 
-# Python Flask Example
+# Python Flask App
 
 This is a [Flask](https://flask.palletsprojects.com/en/1.1.x/) app that serves a simple JSON response.
 
@@ -16,8 +18,12 @@ This is a [Flask](https://flask.palletsprojects.com/en/1.1.x/) app that serves a
 
 - Python
 - Flask
+- MySQL
+- UIKit
+- Javascript
+- AJAX
 
 ## 💁‍♀️ How to use
 
 - Install Python requirements `pip install -r requirements.txt`
-- Start the server for development `python3 main.py`
+- Start the server for development `python3 app.py`
