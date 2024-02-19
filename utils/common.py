@@ -35,7 +35,6 @@ def login_required(f):
 
         if user_id and username:
             user = User.query.filter_by(id=user_id, username=username).first()
-
             if user:
                 # Adiciona o usuário à requisição para ser acessado nas rotas protegidas
                 request.user = user

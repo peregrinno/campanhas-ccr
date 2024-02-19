@@ -30,9 +30,6 @@ def login():
 @app.route('/')
 @login_required
 def index():
-    # Cria o usuário padrão
-    create_default_user()
-    
     username = request.cookies.get('username')
     
     context = {
@@ -45,6 +42,9 @@ def index():
 
 @app.route('/autenticacao', methods=['POST'])
 def authenticate():
+    # Cria o usuário padrão
+    create_default_user()
+    
     data = request.get_json()
 
     username = data.get('username')
@@ -54,7 +54,7 @@ def authenticate():
 
     if user and user.check_password(password):
         # Salva os dados do usuário em um cookie
-        response = make_response(jsonify({'success': True, 'user': user.to_dict()}))
+        response = make_response(jsonify({'success': True, 'user': f'{user.id}'}))
         response.set_cookie('user_id', str(user.id))
         response.set_cookie('username', user.username)
         return response
