@@ -92,7 +92,7 @@ function NovaPessoa() {
     // Faça a requisição AJAX
     $.ajax({
         type: 'POST',
-        url: '/add_pessoa',
+        url: '/pessoas/add_pessoa',
         data: JSON.stringify(formData),  // Converte os dados para JSON
         contentType: 'application/json;charset=UTF-8',  // Define o cabeçalho Content-Type
         success: function (response) {
@@ -121,7 +121,7 @@ function detalhePessoa(id) {
     // Faça a requisição AJAX para obter os detalhes da pessoa
     $.ajax({
       type: 'GET',
-      url: '/pessoa/' + id, 
+      url: '/pessoas/pessoa/' + id, 
       dataType: 'json',
       success: function (data) {
         pessoaID = id;
@@ -164,7 +164,7 @@ function updatePessoa() {
     // Faça a requisição AJAX
     $.ajax({
         type: 'POST',
-        url: '/updt_pessoa/' + id,
+        url: '/pessoas/updt_pessoa/' + id,
         data: JSON.stringify(formData),  // Converte os dados para JSON
         contentType: 'application/json;charset=UTF-8',  // Define o cabeçalho Content-Type
         success: function (response) {
@@ -206,7 +206,7 @@ $('#searchPessoa').on('input', function() {
 // Função para carregar e popular a tabela via AJAX com parâmetro de busca
 function carregarPessoasComBusca(searchTerm) {
     $.ajax({
-        url: '/buscar_pessoas?search=' + searchTerm,
+        url: '/pessoas/buscar_pessoas?search=' + searchTerm,
         type: 'GET',
         dataType: 'json',
         success: function (data) {

@@ -56,23 +56,34 @@ class Campanha(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     criador_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     nome = db.Column(db.String(100), nullable=False)
-    dt_criacao = db.Column(db.Date, nullable=False)
+    dt_criacao = db.Column(db.DateTime, nullable=False)
     dt_inicio = db.Column(db.Date, nullable=False)
     dt_fim = db.Column(db.Date, nullable=False)
     meta = db.Column(db.Float, nullable=False)
-    tipo = db.Column(db.String(50), nullable=False)
+    tipo = db.Column(db.String(50), default='Arrecadação',nullable=True)
+    
+    criador = db.relationship('User', backref='campanhas', foreign_keys=[criador_id])
 
-    def __init__(self, nome, dt_inicio, dt_fim, meta, tipo):
+    def __init__(self, nome, criador_id, dt_inicio, dt_fim, meta, tipo):
+        # Obtenha o fuso horário da America/Recife
+        tz_recife = pytz.timezone('America/Recife')
+        
         self.nome = nome
+        self.criador_id = criador_id
+        self.dt_criacao = datetime.now(tz_recife)
         self.dt_inicio = dt_inicio
         self.dt_fim = dt_fim
         self.meta = meta
         self.tipo = tipo
-
+        
+        
     def to_dict(self):
         return {
             'id': self.id,
             'nome': self.nome,
+            'criador': self.criador.username if self.criador else None,
+            'criador_id': self.criador.id if self.criador else None,
+            'dt_criacao': self.dt_criacao,
             'dt_inicio': self.dt_inicio.isoformat(),
             'dt_fim': self.dt_fim.isoformat(),
             'meta': self.meta,

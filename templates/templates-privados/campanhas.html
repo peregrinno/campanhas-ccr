@@ -1,0 +1,145 @@
+{% extends 'templates-privados/base_priv.html' %}
+
+{% block content %}
+<h1>Campanhas</h1>
+
+<form class="uk-search uk-search-default">
+  <span uk-search-icon></span>
+  <input class="uk-search-input" type="search" placeholder="Procurar campanha" id="searchCampanha" name="searchCampanha"
+    aria-label="">
+</form>
+
+<!-- Paginação -->
+<div class="uk-margin">
+  <ul id="pagina-campanhas" class="uk-pagination" uk-margin></ul>
+</div>
+
+<!-- Tabela de campanhas -->
+<table id="tabela-campanhas" class="uk-table uk-table-justify uk-table-divider">
+  <thead>
+    <tr>
+      <th class="uk-table-shrink">#</th>
+      <th class="uk-table-shrink">Nome</th>
+      <th class="uk-table-shrink">Meta</th>
+      <th class="uk-table-shrink">Criador</th>
+      <th class="uk-table-shrink">Criação</th>
+      <th class="uk-table-shrink">Inicio</th>
+      <th class="uk-table-shrink">Fim</th>
+      <th class="uk-table-shrink">Ação</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Populada via API -->
+  </tbody>
+</table>
+
+<!-- Btn Nova Campanha -->
+<a href="#modal-add-campanha" uk-toggle
+  class="uk-margin uk-button uk-button-medium uk-position-fixed uk-position-large uk-position-bottom-right"
+  style="border-radius: 50px; background: #e0e0e0; box-shadow:  20px 20px 60px #bebebe,-20px -20px 60px #ffffff;"><span
+    uk-icon="icon: plus-circle"></span><b> Novo</b></a>
+
+<!-- Modal de Nova Campanha -->
+<div id="modal-add-campanha" uk-modal>
+  <div class="uk-modal-dialog">
+
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title">Nova campanha</h2>
+    </div>
+
+    <div class="uk-modal-body" uk-overflow-auto>
+      <form class="uk-grid-small" uk-grid style="margin-bottom: 10px;">
+        <div class="uk-width-1-1">
+          <label class="uk-form-label" for="input-nome">Nome</label>
+          <input class="uk-input" type="text" placeholder="Nome" aria-label="Nome" id="input-nome" name="input-nome"
+            required>
+        </div>
+        <div class="uk-width-1-2@s">
+          <label class="uk-form-label" for="input-dt-inicio">Data de início</label>
+            <input class="uk-input" type="date" aria-label="Clickable date" id="input-dt-inicio" name="input-dt-inicio">
+        </div>
+        <div class="uk-width-1-2@s">
+          <label class="uk-form-label" for="input-dt-fim">Data de fim</label>
+            <input class="uk-input" type="date" aria-label="Clickable date" id="input-dt-fim" name="input-dt-fim">
+        </div>
+        <div class="uk-width-1-2@s">
+          <label class="uk-form-label" for="input-meta">Meta</label>
+            <input class="uk-input" type="text" aria-label="Clickable date" id="input-meta" name="input-meta">
+        </div>
+        <div class="uk-width-1-2@s">
+          <div class="uk-form-controls">
+            <label class="uk-form-label" for="slct-tipo">Tipo</label>
+            <select class="uk-select" id="slct-tipo" name="slct-tipo">
+              <!-- Preenchido via AJAX -->
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="uk-modal-footer uk-text-right">
+      <button class="uk-button uk-button-primary uk-modal-close" type="button" onclick="NovaCampanha();">Salvar</button>
+      <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal de Detalhes da Campanha -->
+<div id="modal-detalhes-campanha" uk-modal>
+  <div class="uk-modal-dialog">
+
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title">Detalhes da campanha</h2>
+    </div>
+
+    <div class="uk-modal-body" uk-overflow-auto>
+      <form class="uk-grid-small" uk-grid style="margin-bottom: 10px;">
+        <div class="uk-width-1-1">
+          <label class="uk-form-label" for="input-nome-detalhes">Nome</label>
+          <input class="uk-input" type="text" id="input-nome-detalhes" name="input-nome-detalhes">
+        </div>
+        <div class="uk-width-1-4@s">
+          <label class="uk-form-label" for="input-telefone-detalhes">Telefone</label>
+          <input class="uk-input" type="number" placeholder="Telefone" aria-label="Telefone"
+            id="input-telefone-detalhes" name="input-telefone-detalhes">
+        </div>
+        <div class="uk-width-1-4@s">
+          <div class="uk-form-controls">
+            <label class="uk-form-label" for="input-cidade-detalhes">Cidade</label>
+            <input class="uk-input" type="text" placeholder="Cidade" aria-label="Cidade" id="input-cidade-detalhes"
+              name="input-cidade-detalhes">
+          </div>
+        </div>
+        <div class="uk-width-1-4@s">
+          <div class="uk-form-controls">
+            <label class="uk-form-label" for="slct-estado-detalhes">Estado</label>
+            <select class="uk-select" id="slct-estado-detalhes" name="slct-estado-detalhes">
+
+            </select>
+          </div>
+        </div>
+        <div class="uk-width-1-4@s">
+          <div class="uk-form-controls">
+            <label class="uk-form-label" for="slct-pais-detalhes">Pais</label>
+            <select class="uk-select" id="slct-pais-detalhes" name="slct-pais-detalhes">
+
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="uk-modal-footer uk-text-right">
+      <button class="uk-button uk-button-primary" type="button" onclick="updateCampanha()">Salvar</button>
+      <button class="uk-button uk-button-default uk-modal-close" type="button">Fechar</button>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
