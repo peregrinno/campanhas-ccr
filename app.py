@@ -41,7 +41,7 @@ def index():
         'navegacao': navegacao('Inicio'),
         'total_pessoas' : total_pessoas,
         'total_campanhas' : total_campanhas,
-        'total_metas' : locale.currency(total_metas, grouping=True)
+        'total_metas' : total_metas
     }
     
     #print(context['user'])

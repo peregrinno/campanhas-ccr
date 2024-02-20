@@ -5,13 +5,10 @@ from config import Config
 from models import db
 from functools import wraps
 from sqlalchemy import desc, func
-import os, locale
+import os
 
 # Importação dos modelos (User, Campanha, Pessoa, Rifa, Sorteio)
 from models import DimTipoCampanha, User, Campanha, Pessoa, Rifa, Sorteio
-
-# Definir a localização para o formato brasileiro
-locale.setlocale(locale.LC_MONETARY, 'pt_BR')
 
 def paginate(query, page=1, per_page=10):
     start_index = (page - 1) * per_page
