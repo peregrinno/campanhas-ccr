@@ -1,5 +1,4 @@
 var pessoaID;
-var page;
 
 // Função para carregar e popular a tabela via AJAX
 function carregarPessoas(page) {
