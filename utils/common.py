@@ -4,12 +4,14 @@ from flask_cors import CORS
 from config import Config
 from models import db
 from functools import wraps
-from sqlalchemy import desc
-import os
-
+from sqlalchemy import desc, func
+import os, locale
 
 # Importação dos modelos (User, Campanha, Pessoa, Rifa, Sorteio)
-from models import User, Campanha, Pessoa, Rifa, Sorteio
+from models import DimTipoCampanha, User, Campanha, Pessoa, Rifa, Sorteio
+
+# Definir a localização para o formato brasileiro
+locale.setlocale(locale.LC_MONETARY, 'pt_BR')
 
 def paginate(query, page=1, per_page=10):
     start_index = (page - 1) * per_page
@@ -20,11 +22,20 @@ def paginate(query, page=1, per_page=10):
 def create_default_user():
     # Verifica se o usuário já existe
     existing_user = User.query.filter_by(username='admin').first()
+    
+    existing_types = DimTipoCampanha.query.filter_by(id=1).first()
 
     if not existing_user:
         # Se o usuário não existir, cria um novo usuário padrão
         default_user = User(username='admin', email='admin@administrador.com', password='adminpassword')
         db.session.add(default_user)
+        db.session.commit()
+    
+    if not existing_types:
+        default_type = DimTipoCampanha(nome='Rifa')
+        db.session.add(default_type)
+        default_type = DimTipoCampanha(nome='Arrecadação')
+        db.session.add(default_type)
         db.session.commit()
         
 def login_required(f):

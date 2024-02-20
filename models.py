@@ -7,6 +7,19 @@ import secrets
 
 db = SQLAlchemy()
 
+class DimTipoCampanha(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    
+    def __init__(self, nome):
+        self.nome = nome
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nome': self.nome,
+        }
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -60,11 +73,12 @@ class Campanha(db.Model):
     dt_inicio = db.Column(db.Date, nullable=False)
     dt_fim = db.Column(db.Date, nullable=False)
     meta = db.Column(db.Float, nullable=False)
-    tipo = db.Column(db.String(50), default='Arrecadação',nullable=True)
+    tipo_id = db.Column(db.Integer, db.ForeignKey(DimTipoCampanha.__tablename__ + '.id'), nullable=False)
     
     criador = db.relationship('User', backref='campanhas', foreign_keys=[criador_id])
+    tipo = db.relationship('DimTipoCampanha', backref='campanhas', foreign_keys=[tipo_id])
 
-    def __init__(self, nome, criador_id, dt_inicio, dt_fim, meta, tipo):
+    def __init__(self, nome, criador_id, dt_inicio, dt_fim, meta, tipo_id):
         # Obtenha o fuso horário da America/Recife
         tz_recife = pytz.timezone('America/Recife')
         
@@ -74,7 +88,7 @@ class Campanha(db.Model):
         self.dt_inicio = dt_inicio
         self.dt_fim = dt_fim
         self.meta = meta
-        self.tipo = tipo
+        self.tipo_id = tipo_id
         
         
     def to_dict(self):
@@ -87,7 +101,7 @@ class Campanha(db.Model):
             'dt_inicio': self.dt_inicio.isoformat(),
             'dt_fim': self.dt_fim.isoformat(),
             'meta': self.meta,
-            'tipo': self.tipo
+            'tipo': self.tipo.nome
         }
 """
 id é a chave primária da campanha.
@@ -224,3 +238,4 @@ id_pessoa é uma chave estrangeira que se refere à tabela Pessoa.
 validacao é um código validador gerado para o sorteio.
 O método _gerar_codigo_validador é utilizado para gerar um código validador usando a função secrets.token_hex, que gera um token hexadecimal seguro. 
 """
+

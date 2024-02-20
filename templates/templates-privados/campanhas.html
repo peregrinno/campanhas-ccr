@@ -21,7 +21,7 @@
       <th class="uk-table-shrink">#</th>
       <th class="uk-table-shrink">Campanha</th>
       <th class="uk-table-shrink">Meta</th>
-      <th class="uk-table-shrink">Criador</th>
+      <th class="uk-table-shrink">Tipo</th>
       <th class="uk-table-shrink">Criação</th>
       <th class="uk-table-shrink">Inicio</th>
       <th class="uk-table-shrink">Fim</th>
@@ -72,7 +72,9 @@
           <div class="uk-form-controls">
             <label class="uk-form-label" for="slct-tipo">Tipo</label>
             <select class="uk-select" id="slct-tipo" name="slct-tipo">
-              <!-- Preenchido via AJAX -->
+              {% for tipo in context.tipos %}
+                <option value="{{tipo.id}}">{{tipo.nome}}</option>
+              {% endfor %}
             </select>
           </div>
         </div>
@@ -119,7 +121,9 @@
           <div class="uk-form-controls">
             <label class="uk-form-label" for="slct-tipo-detalhes">Tipo</label>
             <select class="uk-select" id="slct-tipo-detalhes" name="slct-tipo-detalhes">
-              <!-- Preenchido via AJAX -->
+              {% for tipo in context.tipos %}
+                <option value="{{tipo.id}}">{{tipo.nome}}</option>
+              {% endfor %}
             </select>
           </div>
         </div>

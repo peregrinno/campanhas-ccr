@@ -6,10 +6,11 @@ from . import campanhas_blueprint
 @login_required
 def pag_campanhas():
     username = request.cookies.get('username')
-    
+    tipos = DimTipoCampanha.query.all()
     context = {
        'user': username,
-       'navegacao': navegacao('Campanhas')
+       'navegacao': navegacao('Campanhas'),
+       'tipos': tipos
     }
     
     return render_template('templates-privados/campanhas.html', context=context)
@@ -75,7 +76,7 @@ def add_campanha():
         dt_inicio=data.get('dt_inicio'),
         dt_fim=data.get('dt_fim'),
         meta= float(data.get('meta').replace(',', '')),
-        tipo=data.get('tipo') 
+        tipo_id=data.get('tipo') 
     )
     
     # Adiciona a nova campanha ao banco de dados
@@ -106,7 +107,7 @@ def updt_campanha(id):
     campanha.dt_inicio = att['dt_inicio']
     campanha.dt_fim = att['dt_fim']
     campanha.meta = float(att['meta'].replace(',',''))
-    campanha.tipo = att['tipo']
+    campanha.tipo_id = att['tipo']
     
     #Confirmando transação
     db.session.commit()

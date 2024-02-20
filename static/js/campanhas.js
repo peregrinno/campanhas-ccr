@@ -21,7 +21,7 @@ function carregarCampanhas(page) {
               <td>${campanha.id}</td>
               <td>${campanha.nome}</td>
               <td>${parseFloat(campanha.meta).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-              <td>${campanha.criador}</td>
+              <td>${campanha.tipo}</td>
               <td>${new Date(campanha.dt_criacao).toLocaleString()}</td>
               <td>${new Date(`${campanha.dt_inicio}T23:59:59Z`).toLocaleDateString()}</td>
               <td>${new Date(`${campanha.dt_fim}T23:59:59Z`).toLocaleDateString()}</td>
@@ -123,6 +123,8 @@ function NovaCampanha() {
 }
 
 function detalheCampanha(id) {
+    carregarTipos()
+
     // Faça a requisição AJAX para obter os detalhes da campanha
     $.ajax({
         type: 'GET',
@@ -197,6 +199,7 @@ function updateCampanha() {
 // Chama a função ao carregar a página
 $(document).ready(function () {
     carregarCampanhas(1);
+
     var cleaveMeta = new Cleave('#input-meta', {
         numeral: true,
         numeralThousandsGroupStyle: 'thousand'
@@ -255,3 +258,26 @@ function carregarCampanhasComBusca(searchTerm) {
     });
 }
 
+function carregarTipos(){
+    $.ajax({
+        url: '/dimensoes/tipos',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            $("#slct-tipo select").empty();
+
+            if ('tipos' in data) {
+                data.tipos.forEach(function (tipo){
+                    $("#slct-tipo select").append(`
+                        <option value="${tipo.id}">${tipo.nome}</option>
+                    `);
+                });
+            } else {
+                console.warn('Erro ao carregar tipos');
+            }
+        },
+        error: function (error) { 
+            console.error('Erro na requisição de tipos.')
+        }
+    });
+}

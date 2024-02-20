@@ -1,6 +1,6 @@
 from utils.common import *
 
-from modulos import pessoas_blueprint, campanhas_blueprint
+from modulos import dimensoes_blueprint, pessoas_blueprint, campanhas_blueprint
 
 app = Flask(__name__)
 
@@ -32,9 +32,16 @@ def login():
 def index():
     username = request.cookies.get('username')
     
+    total_pessoas = Pessoa.query.count() or 0
+    total_campanhas = Campanha.query.count() or 0
+    total_metas = db.session.query(func.sum(Campanha.meta)).scalar() or 0
+    
     context = {
         'user': username,
-        'navegacao': navegacao('Inicio')
+        'navegacao': navegacao('Inicio'),
+        'total_pessoas' : total_pessoas,
+        'total_campanhas' : total_campanhas,
+        'total_metas' : locale.currency(total_metas, grouping=True)
     }
     
     #print(context['user'])
@@ -82,6 +89,7 @@ def not_found_error(error):
 # Registrar os blueprints para cada modulo
 app.register_blueprint(pessoas_blueprint, url_prefix='/pessoas')
 app.register_blueprint(campanhas_blueprint, url_prefix='/campanhas')
+app.register_blueprint(dimensoes_blueprint, url_prefix='/dimensoes')
 
 if __name__ == '__main__':
     # Executa as migrações antes de iniciar o aplicativo

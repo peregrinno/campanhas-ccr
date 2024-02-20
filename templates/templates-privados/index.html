@@ -1,5 +1,25 @@
 {% extends 'templates-privados/base_priv.html' %}
 
 {% block content %}
-  <h1>Olá, {{context.user}}!</h1>
+  <h1 data-aos="fade-left">Olá, {{context.user}}!</h1>
+  <div class="uk-child-width-expand@s" uk-grid>
+    <div>
+        <div class="uk-card uk-card-default uk-card-body" data-aos="fade-down">
+          <h2 style="font-weight: 700;">Pessoas</h2>
+          <h1 class="number" data-number>{{ context.total_pessoas }}</h1>
+        </div>
+    </div>
+    <div>
+        <div class="uk-card uk-card-default uk-card-body" data-aos="fade-down">
+          <h2 style="font-weight: 700;">Campanhas</h2>
+          <h1 class="number" data-number>{{ context.total_campanhas }}</h1>
+        </div>
+    </div>
+    <div>
+        <div class="uk-card uk-card-default uk-card-body" data-aos="fade-down">
+          <h2 style="font-weight: 700;">Metas totais</h2>
+          <h1>{{ context.total_metas }}</h1>
+        </div>
+    </div>
+  </div>
 {% endblock %}
