@@ -1,5 +1,6 @@
 var campanhaID;
 var page;
+var tipoSalvo;
 
 // Função para carregar e popular a tabela via AJAX
 function carregarCampanhas(page) {
@@ -11,7 +12,7 @@ function carregarCampanhas(page) {
             //console.log(data);
             // Limpar a tabela antes de popular com os novos dados
             $('#tabela-campanhas tbody').empty();
-            console.log(data.campanhas);
+            //console.log(data.campanhas);
             // Verificar se a resposta contém o array 'campanhas'
             if ('campanhas' in data && Array.isArray(data.campanhas)) {
                 // Popula a tabela com os dados recebidos
@@ -21,7 +22,7 @@ function carregarCampanhas(page) {
               <td>${campanha.id}</td>
               <td>${campanha.nome}</td>
               <td>${parseFloat(campanha.meta).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-              <td>${campanha.tipo}</td>
+              <td>${campanha.tipo[0]}</td>
               <td>${new Date(campanha.dt_criacao).toLocaleString()}</td>
               <td>${new Date(`${campanha.dt_inicio}T23:59:59Z`).toLocaleDateString()}</td>
               <td>${new Date(`${campanha.dt_fim}T23:59:59Z`).toLocaleDateString()}</td>
@@ -123,7 +124,6 @@ function NovaCampanha() {
 }
 
 function detalheCampanha(id) {
-    carregarTipos()
 
     // Faça a requisição AJAX para obter os detalhes da campanha
     $.ajax({
@@ -131,6 +131,7 @@ function detalheCampanha(id) {
         url: '/campanhas/campanha/' + id,
         dataType: 'json',
         success: function (data) {
+            console.log(data);
             campanhaID = id;
             //console.log(data);
             // Preencha os campos do modal com os dados recebidos
@@ -138,10 +139,14 @@ function detalheCampanha(id) {
             $('#input-dt-inicio-detalhes').val(data.dt_inicio);
             $('#input-dt-fim-detalhes').val(data.dt_fim);
             $('#input-meta-detalhes').val(data.meta);
-            $('#slct-tipo-detalhes').val(data.tipo);
+            //$('#slct-tipo-detalhes select').val(data.tipo[0]);
 
             // Abra o modal de detalhes da campanha
             UIkit.modal('#modal-detalhes-campanha').show();
+
+            //console.log(data.tipo[0], data.tipo[1]);
+
+            carregarTiposDetalhado(data.tipo[0], data.tipo[1])
         },
         error: function (error) {
             console.error('Erro ao obter detalhes da campanha via AJAX:', error);
@@ -204,12 +209,12 @@ $(document).ready(function () {
         numeral: true,
         numeralThousandsGroupStyle: 'thousand'
     });
-    
+
     var cleaveMetaDetalhes = new Cleave('#input-meta-detalhes', {
         numeral: true,
         numeralThousandsGroupStyle: 'thousand'
     });
-    
+
 });
 
 // Adicione um evento de input para detectar mudanças no campo de busca
@@ -240,7 +245,7 @@ function carregarCampanhasComBusca(searchTerm) {
                             <td>${campanha.id}</td>
                             <td>${campanha.nome}</td>
                             <td>${parseFloat(campanha.meta).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-                            <td>${campanha.criador}</td>
+                            <td>${campanha.tipo}</td>
                             <td>${new Date(campanha.dt_criacao).toLocaleString()}</td>
                             <td>${new Date(`${campanha.dt_inicio}T23:59:59Z`).toLocaleDateString()}</td>
                             <td>${new Date(`${campanha.dt_fim}T23:59:59Z`).toLocaleDateString()}</td>
@@ -258,7 +263,7 @@ function carregarCampanhasComBusca(searchTerm) {
     });
 }
 
-function carregarTipos(){
+function carregarTipos() {
     $.ajax({
         url: '/dimensoes/tipos',
         type: 'GET',
@@ -267,7 +272,7 @@ function carregarTipos(){
             $("#slct-tipo select").empty();
 
             if ('tipos' in data) {
-                data.tipos.forEach(function (tipo){
+                data.tipos.forEach(function (tipo) {
                     $("#slct-tipo select").append(`
                         <option value="${tipo.id}">${tipo.nome}</option>
                     `);
@@ -276,7 +281,41 @@ function carregarTipos(){
                 console.warn('Erro ao carregar tipos');
             }
         },
-        error: function (error) { 
+        error: function (error) {
+            console.error('Erro na requisição de tipos.')
+        }
+    });
+}
+
+function carregarTiposDetalhado(tipo_salvo, id_salvo) {
+    $.ajax({
+        url: '/dimensoes/tipos',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            let selectTipoDetalhe = $("#slct-tipo-detalhes")
+
+            selectTipoDetalhe.empty();
+
+            let opcoesHTML = `
+                <option value="${id_salvo}" selected>${tipo_salvo}</option>
+            `
+
+            selectTipoDetalhe.append(opcoesHTML)
+
+            //Popula o resto do select com os demais tipos
+            if ('tipos' in data) {
+                data.tipos.forEach(function (tipo) {
+                    opcoesHTML = `
+                        <option value="${tipo.id}">${tipo.nome}</option>
+                    `;
+                    selectTipoDetalhe.append(opcoesHTML)
+                });
+            } else {
+                console.warn('Erro ao carregar tipos');
+            }
+        },
+        error: function (error) {
             console.error('Erro na requisição de tipos.')
         }
     });

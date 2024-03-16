@@ -83,7 +83,7 @@ def add_campanha():
     db.session.add(nova_campanha)
     db.session.commit()
 
-    return jsonify({'message': 'campanha adicionada com sucesso!'}), 201
+    return jsonify({'message': 'Campanha adicionada com sucesso!'}), 201
 
 @campanhas_blueprint.route('/campanha/<int:id>', methods=['GET'])
 @login_required

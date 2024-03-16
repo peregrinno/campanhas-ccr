@@ -101,7 +101,7 @@ class Campanha(db.Model):
             'dt_inicio': self.dt_inicio.isoformat(),
             'dt_fim': self.dt_fim.isoformat(),
             'meta': self.meta,
-            'tipo': self.tipo.nome
+            'tipo': [self.tipo.nome, self.tipo.id]
         }
 """
 id é a chave primária da campanha.
