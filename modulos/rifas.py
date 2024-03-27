@@ -48,5 +48,5 @@ def gerarRifas():
             
         return jsonify({"message":"Rifas geradas com sucesso!"})
     except:
-        return jsonify({"message":"Opss... Algo não saiu como planejado.."})
+        return jsonify({"message":"Opss... Algo não saiu como planejado.."}), 500
        
