@@ -149,17 +149,18 @@ A função to_dict é novamente um método opcional que converte um objeto Pesso
 class Rifa(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_campanha = db.Column(db.Integer, db.ForeignKey('campanha.id'), nullable=False)
-    id_pessoa = db.Column(db.Integer, db.ForeignKey('pessoa.id'), nullable=False)
+    id_pessoa = db.Column(db.Integer, db.ForeignKey('pessoa.id'), nullable=True)
     numero = db.Column(db.Integer, nullable=False)
     disponibilidade = db.Column(db.String(15), nullable=False, default='Disponivel')
     dt_compra = db.Column(db.DateTime, nullable=True)
     vendedor = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     num_sorteado = db.Column(db.String(3), nullable=False, default='Não')
+    valor = db.Column(db.Float, nullable=False, default=0.0)
 
-    def __init__(self, id_campanha, id_pessoa, numero):
+    def __init__(self, id_campanha, numero, valor):
         self.id_campanha = id_campanha
-        self.id_pessoa = id_pessoa
         self.numero = numero
+        self.valor = valor
 
     def comprar_rifa(self, id_pessoa, vendedor=None):
         self.id_pessoa = id_pessoa
@@ -184,7 +185,8 @@ class Rifa(db.Model):
             'disponibilidade': self.disponibilidade,
             'dt_compra': self.dt_compra.isoformat() if self.dt_compra else None,
             'vendedor': self.vendedor,
-            'num_sorteado': self.num_sorteado
+            'num_sorteado': self.num_sorteado,
+            'valor': self.valor
         }
 """
 id é a chave primária da tabela Rifa.

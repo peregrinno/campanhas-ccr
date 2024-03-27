@@ -1,0 +1,31 @@
+{% extends 'templates-privados/base_priv.html' %}
+
+{% block content %}
+<h1>Rifas</h1>
+
+{% if context.campanhas %}
+
+<div class="uk-alert-warning" uk-alert>
+    <a href="#" class="uk-alert-close" uk-close></a>
+    <h3>Atenção</h3>
+    <p>
+        A(s) campanha(s) 
+        {% for campanha in context.campanhas %}
+            <b>{{ campanha.nome }}</b>
+            {% if not loop.last %}, {% endif %}
+        {% endfor %}
+        {% if context.campanhas|length > 1 %}
+            estão
+        {% else %}
+            está
+        {% endif %}
+        sem rifas associadas. Por favor, utilize o distribuidor de rifas para gerar cotas, numeros e demais informações de cada rifa.
+    </p>
+</div>
+{% endif %}
+
+<a class="uk-button uk-button-primary uk-button-large" href="{{ url_for('rifas.gdr', filename='') }}">Gerador de rifas</a>
+
+<hr class="uk-divider-icon">
+
+{% endblock %}

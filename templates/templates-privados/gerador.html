@@ -1,0 +1,56 @@
+{% extends 'templates-privados/base_priv.html' %}
+
+{% block content %}
+<h1>Gerador de rifas</h1>
+
+
+{% if context.campanhas %}
+<h2>Campanhas disponíveis para geração de rifas</h2>
+<div class="uk-child-width-1-4@s uk-grid-match" uk-grid>
+{% for campanha in context.campanhas %}
+<div>
+    <div class="uk-card uk-card-default uk-card-hover uk-card-body">
+        <h3 class="uk-card-title">{{campanha.nome}}</h3>
+        <button class="uk-button uk-button-text" type="button" uk-toggle="target: #modalGerarRifas" onclick="getCampanha({{campanha.id}})">Geração</button>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+
+<hr class="uk-divider-icon">
+
+<div id="modalGerarRifas" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title" id="nomeCampanhaSelecionada"></h2>
+        </div>
+        <div class="uk-modal-body">
+            <div class="uk-margin">
+                <label class="uk-form-label" for="idCampanhaSelecionada">ID da Campanha</label>
+                <input class="uk-input uk-form-width-medium" type="text" placeholder="ID da Campanha" aria-label="disabled" id="idCampanhaSelecionada" disabled>
+            </div>
+            <form class="uk-grid-small" uk-grid>
+                <div class="uk-width-1-4@s">
+                    <label class="uk-form-label" for="quantidadeDeRifas">Quantidade de rifas</label>
+                    <input class="uk-input" type="number" id="quantidadeDeRifas" value="1">
+                </div>
+                <div class="uk-width-1-4@s">
+                    <label class="uk-form-label" for="valorDaRifa">Valor da rifa</label>
+                    <input class="uk-input" type="text" id=valorDaRifa>
+                </div>
+                <div class="uk-width-1-2@s">
+                    <label class="uk-form-label" for="totalDeRifasEmReais">Total em R$</label>
+                <input class="uk-input uk-form-width-medium" type="text" placeholder="ID da Campanha" aria-label="disabled" id="totalDeRifasEmReais" disabled>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+            <button class="uk-button uk-button-primary" type="button" onclick="confirmarGeracao()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

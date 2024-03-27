@@ -1,6 +1,6 @@
 from utils.common import *
 
-from modulos import dimensoes_blueprint, pessoas_blueprint, campanhas_blueprint
+from modulos import *
 
 app = Flask(__name__)
 
@@ -89,11 +89,12 @@ def not_found_error(error):
 # Registrar os blueprints para cada modulo
 app.register_blueprint(pessoas_blueprint, url_prefix='/pessoas')
 app.register_blueprint(campanhas_blueprint, url_prefix='/campanhas')
+app.register_blueprint(rifas_blueprint, url_prefix='/rifas')
 app.register_blueprint(dimensoes_blueprint, url_prefix='/dimensoes')
 
 if __name__ == '__main__':
     # Executa as migrações antes de iniciar o aplicativo
-    run_migrations()
+    #run_migrations()
     
     app.run(debug=True, port=os.getenv("PORT", default=5000), use_reloader=True)
     

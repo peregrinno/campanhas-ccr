@@ -58,11 +58,12 @@ def navegacao(pagina):
     paginas = {
         'Inicio': ['index', ''],
         'Campanhas': ['campanhas.pag_campanhas',''],
-        'Rifas': ['',''],
+        'Rifas': ['rifas.pag_rifas',''],
         'Pessoas': ['pessoas.pag_pessoas',''],
     }
     
     paginas[f'{pagina}'][1] = 'uk-active'
+    
     """
     print(paginas)
     for item in paginas:
@@ -70,4 +71,25 @@ def navegacao(pagina):
     """
         
     return paginas
+
+@login_required
+def check_campanhas():
+    campanhas_sem_rifas = []
+
+    # Obter IDs das campanhas com rifas
+    campanhas_com_rifas = set(rifa.id_campanha for rifa in Rifa.query.distinct(Rifa.id_campanha))
+
+    # Varrer campanhas
+    campanhas = Campanha.query.filter(Campanha.tipo.has(nome='Rifa')).all()
+
+    # Checar uma a uma
+    for campanha in campanhas:
+        if campanha.id not in campanhas_com_rifas:
+            campanhas_sem_rifas.append({'id': campanha.id, 'nome': campanha.nome})
+            
+    
+    return campanhas_sem_rifas
+
+
+
 
