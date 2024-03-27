@@ -46,7 +46,7 @@ def gerarRifas():
             db.session.add(rf)
             db.session.commit()
             
-        return jsonify({"message":"Rifas geradas com sucesso!"})
+        return jsonify({"message":"Rifas geradas com sucesso!"}), 200
     except:
         return jsonify({"message":"Opss... Algo não saiu como planejado.."}), 500
        
