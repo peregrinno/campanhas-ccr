@@ -199,6 +199,51 @@ num_sorteado indica se o número foi sorteado ou não.
 Os métodos comprar_rifa e sortear_rifa são exemplos de como você pode alterar o estado da rifa durante a compra e o sorteio. A função to_dict é, mais uma vez, um método opcional que converte um objeto Rifa em um dicionário.
 """
 
+class Talao(db.Model):
+    # Definição dos campos da tabela talao
+    id = db.Column(db.Integer, primary_key=True)  # Campo de identificação único
+    id_campanha = db.Column(db.Integer, db.ForeignKey('campanha.id'), nullable=False)  # Chave estrangeira para a tabela campanha
+    n_inicial = db.Column(db.Integer, nullable=False)  # Número inicial do talão
+    n_final = db.Column(db.Integer, nullable=False)  # Número final do talão
+    cotista = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # Chave estrangeira para a tabela user (opcional)
+
+    usuario = db.relationship('User', backref='talao', foreign_keys=[cotista])
+
+    def __init__(self, id_campanha, n_inicial, n_final, cotista=None):
+        """
+        Método de inicialização da classe talao.
+
+        Args:
+            id_campanha (int): ID da campanha associada ao talão.
+            n_inicial (int): Número inicial do talão.
+            n_final (int): Número final do talão.
+            cotista (int, optional): ID do usuário cotista associado ao talão. Padrão é None.
+        """
+        # Atribuição dos valores aos atributos da classe
+        self.id_campanha = id_campanha
+        self.n_inicial = n_inicial
+        self.n_final = n_final
+        self.cotista = cotista
+
+    def to_dict(self):
+        """
+        Método para converter um objeto da classe talao em um dicionário.
+
+        Returns:
+            dict: Um dicionário contendo os atributos do objeto talao.
+        """
+        # Retorna os atributos da instância em forma de dicionário
+        return {
+            'id': self.id,
+            'id_campanha': self.id_campanha,
+            'n_inicial': self.n_inicial,
+            'n_final': self.n_final,
+            'cotista': self.usuario.username if self.cotista else None
+        }
+
+    def uptdCotista(self, id_usuario):
+        self.cotista = id_usuario
+    
 class Sorteio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_campanha = db.Column(db.Integer, db.ForeignKey('campanha.id'), nullable=False)

@@ -2,7 +2,7 @@
 <html lang="pt-br">
 
 <head>
-    <title>Inicio</title>
+    <title>{% block title %}Inicio{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -86,7 +86,7 @@
             {% endblock %}
         </div>
     </main>
-    <script src="{{ url_for('static', filename='js/gerador.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/rifa.js')}}"></script>
     <script src="{{ url_for('static', filename='js/pessoas.js')}}"></script>
     <script src="{{ url_for('static', filename='js/campanhas.js')}}"></script>
     <script src="{{ url_for('static', filename='js/aniNumeros.js')}}"></script>

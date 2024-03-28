@@ -1,0 +1,120 @@
+{% extends 'templates-privados/base_priv.html' %}
+
+{% block title %}
+    Rifa {{context.campanha.nome }}
+{% endblock title %}
+
+{% block content %}
+<h1 data-aos="fade-up">Rifa da campanha <b>{{context.campanha.nome}}</b></h1>
+
+<hr class="uk-divider-icon">
+{% if context.rifaCotada == true %}
+    <h2 data-aos="fade-right">Talões de rifa</h2>
+    <div class="uk-container">
+        <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+            <thead data-aos="fade-down">
+                <tr>
+                    <th>Nº do talão</th>
+                    <th>De</th>
+                    <th>Até</th>
+                    <th>Cotista</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for talao in context.taloes %}
+                <tr data-aos="fade-left">
+                    <td>{{talao.id}}</td>
+                    <td>{{talao.n_inicial}}</td>
+                    <td>{{talao.n_final}}</td>
+                    {% if talao.cotista == None %}
+                        <td>
+                            <div class="uk-margin">
+                                <div uk-form-custom="target: > * > span:first-child">
+                                    <select class="uk-padding atualizaCotista" data-id="{{ talao.id }}">
+                                        <option>Selecione</option>
+                                        {% for usuario in context.usuarios %}
+                                        <option value="{{usuario.id}}">{{usuario.username}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button class="uk-button uk-button-default" type="button" tabindex="-1" style="border-radius: 15px !important;">
+                                        <span></span>
+                                        <span uk-icon="icon: chevron-down"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    {% else %}
+                        <td>{{talao.cotista}}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <h2 data-aos="fade-left">Rifa não cotada!</h2>
+    <div data-aos="fade-right" class="uk-grid-small uk-child-width-expand@s" uk-grid>
+        <div class="uk-animation-toggle" tabindex="0">
+            <button 
+            class="uk-button uk-button-primary uk-button-large uk-transform-origin-bottom-right uk-animation-scale-up uk-box-shadow-medium" 
+            type="button" 
+            uk-toggle="target: #modalCotarRifa">
+                Cotar rifa! 
+            </button>
+        </div>
+    </div>
+{% endif %}
+
+
+
+<div id="modalCotarRifa" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Cotação das rifas da campanha <b>{{ context.campanha.nome }}</b></h2>
+        </div>
+        <div class="uk-modal-body">
+            <div class="uk-margin">
+                <p>Total de numeros: <b id="totalDeNumeros">{{context.estatisticas.totalDeRifas}}</b> </p>
+                <p>Total de cotistas: <b>{{context.estatisticas.totalDeUsuarios}}</b> </p>
+            </div>
+            <form class="uk-grid-small" uk-grid>
+                <div class="uk-width-1-6@s">
+                    <label class="uk-form-label" for="idCampanhaSelecionada">Campanha</label>
+                    <input class="uk-input uk-form-width-medium" type="text" placeholder="ID da Campanha" aria-label="disabled" value="{{context.campanha.id}}" id="idCampanhaSelecionada" disabled>
+                </div>
+                <div class="uk-width-1-6@s">
+                    <label class="uk-form-label" for="vlrDaRifa">R$ do Nº </label>
+                    <input class="uk-input uk-form-width-medium" type="text" placeholder="ID da Campanha" aria-label="disabled" value="{{context.vlrRifa}}" id="vlrDaRifa" disabled>
+                </div>
+                <div class="uk-width-1-3@s">
+                    <label class="uk-form-label" for="quantidadeDeTaloes">Nº de talões desejados</label>
+                    <input class="uk-input" type="number" id="quantidadeDeTaloes" value="1" max="{{context.estatisticas.totalDeRifas}}" min="1">
+                </div>
+                <div class="uk-width-1-3@s">
+                    <label class="uk-form-label" for="quantidadeDeCotistas">Nº Cotistas</label>
+                    <input class="uk-input" type="number" id="quantidadeDeCotistas" value="1" max="{{context.estatisticas.totalDeUsuarios}}" min="1">
+                </div>
+            </form>
+            <hr class="uk-divider-icon">
+            <div class="uk-margin">
+                <h4>Resumo</h4>
+            </div>
+            <div class="uk-margin">
+                <p>Numeros por talão: <b id="numPorTalao"></b></p>
+                <p>Talões por cotista: <b id="talaoPorCotista"></b></p>
+                <p>Meta individual: <b id="metaIndividual"></b></p>
+            </div>
+
+            <div class="uk-margin" id="mensagemErro" style="color: red;"></div>
+
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+            <button class="uk-button uk-button-primary" type="button" id="confirmarGeracaoDeTaloes" onclick="confirmarGeracaoDeTaloes()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

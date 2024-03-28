@@ -1,14 +1,14 @@
 {% extends 'templates-privados/base_priv.html' %}
 
 {% block content %}
-<h1>Gerador de rifas</h1>
+<h1 data-aos="fade-down">Gerador de rifas</h1>
 
 
 {% if context.campanhas %}
-<h2>Campanhas disponíveis para geração de rifas</h2>
+<h2 data-aos="fade-up">Campanhas disponíveis para geração de rifas</h2>
 <div class="uk-child-width-1-4@s uk-grid-match" uk-grid>
 {% for campanha in context.campanhas %}
-<div>
+<div data-aos="fade-up">
     <div class="uk-card uk-card-default uk-card-hover uk-card-body">
         <h3 class="uk-card-title">{{campanha.nome}}</h3>
         <button class="uk-button uk-button-text" type="button" uk-toggle="target: #modalGerarRifas" onclick="getCampanha({{campanha.id}})">Geração</button>

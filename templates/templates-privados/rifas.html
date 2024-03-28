@@ -1,11 +1,11 @@
 {% extends 'templates-privados/base_priv.html' %}
 
 {% block content %}
-<h1>Rifas</h1>
+<h1 data-aos="fade-up">Rifas</h1>
 
 {% if context.campanhas %}
 
-<div class="uk-alert-warning" uk-alert>
+<div data-aos="fade-left" class="uk-alert-warning" uk-alert>
     <a href="#" class="uk-alert-close" uk-close></a>
     <h3>Atenção</h3>
     <p>
@@ -19,13 +19,30 @@
         {% else %}
             está
         {% endif %}
-        sem rifas associadas. Por favor, utilize o distribuidor de rifas para gerar cotas, numeros e demais informações de cada rifa.
+        sem rifas associadas. Por favor, utilize o gerador de rifas para gerar numeros e demais informações de cada rifa.
     </p>
 </div>
 {% endif %}
-
-<a class="uk-button uk-button-primary uk-button-large" href="{{ url_for('rifas.gdr', filename='') }}">Gerador de rifas</a>
+<div data-aos="fade-right" class="uk-grid-small uk-child-width-expand@s" uk-grid>
+    <div class="uk-animation-toggle" tabindex="0">
+        <a class="uk-button uk-button-primary uk-button-large uk-transform-origin-bottom-right uk-animation-scale-up uk-box-shadow-medium" href="{{ url_for('rifas.gdr', filename='') }}">Gerador de rifas</a>
+    </div>
+</div>
 
 <hr class="uk-divider-icon">
+
+{% if context.rifas %}
+<h2>Campanhas com rifas</h2>
+<div class="uk-child-width-1-4@s uk-grid-match" uk-grid>
+{% for campanha in context.rifas %}
+<div data-aos="fade-up">
+    <div class="uk-card uk-card-default uk-card-hover uk-card-body">
+        <h3 class="uk-card-title">{{campanha.nome}}</h3>
+        <a class="uk-button uk-button-text" type="button" href="{{ url_for('rifas.rifa', id=campanha.id) }}">Ver</a>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endif %}
 
 {% endblock %}

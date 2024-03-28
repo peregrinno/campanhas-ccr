@@ -8,7 +8,7 @@ from sqlalchemy import desc, func
 import os
 
 # Importação dos modelos (User, Campanha, Pessoa, Rifa, Sorteio)
-from models import DimTipoCampanha, User, Campanha, Pessoa, Rifa, Sorteio
+from models import DimTipoCampanha, User, Campanha, Pessoa, Rifa, Sorteio, Talao
 
 def paginate(query, page=1, per_page=10):
     start_index = (page - 1) * per_page
@@ -90,6 +90,22 @@ def check_campanhas():
     
     return campanhas_sem_rifas
 
+@login_required
+def check_rifas():
+    rifas = []
 
+    # Obter IDs das campanhas com rifas
+    campanhas_com_rifas = set(rifa.id_campanha for rifa in Rifa.query.distinct(Rifa.id_campanha))
+
+    # Varrer campanhas
+    campanhas = Campanha.query.filter(Campanha.tipo.has(nome='Rifa')).all()
+
+    # Checar uma a uma
+    for campanha in campanhas:
+        if campanha.id in campanhas_com_rifas:
+            rifas.append({'id': campanha.id, 'nome': campanha.nome})
+            
+    
+    return rifas
 
 
