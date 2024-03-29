@@ -3,3 +3,49 @@
     max-width: 60px !important;
     box-shadow: 0px 0px 6px -2px rgba(42, 42, 42, 1);
 }
+
+.btn-destaque {
+    border: none;
+    width: 15em;
+    height: 5em;
+    border-radius: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: #1C1A1C;
+    cursor: pointer;
+    transition: all 450ms ease-in-out;
+    margin: 20px;
+    color: #fff;
+  }
+  
+  .sparkle {
+    fill: #AAAAAA;
+    transition: all 800ms ease;
+  }
+  
+  .text {
+    font-weight: 600;
+    color: #AAAAAA;
+    font-size: medium;
+  }
+  
+  .btn-destaque:hover {
+    background: linear-gradient(0deg,#f39c7c,#ea5b3f);
+    box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.4),
+    inset 0px -4px 0px 0px rgba(0, 0, 0, 0.2),
+    0px 0px 0px 4px rgba(255, 255, 255, 0.2),
+    0px 0px 180px 0px #ffcd17;
+    transform: translateY(-2px);
+    text-decoration: none !important;
+  }
+  
+  .btn-destaque:hover .text {
+    color: white !important;
+  }
+  
+  .btn-destaque:hover .sparkle {
+    fill: white;
+    transform: scale(1.2);
+  } 
