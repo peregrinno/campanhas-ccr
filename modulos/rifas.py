@@ -7,10 +7,19 @@ from . import rifas_blueprint
 @login_required
 def pag_rifas():
     username = request.cookies.get('username')
+    user_id = request.cookies.get('user_id')
+    
+    usuario = User.query.get_or_404(user_id)
+    
+    if {"admin": "sudo"} in usuario.getPermissions():
+        nav = navegacao('Rifas', "admin")
+    elif {"user": "permissoes padrao"} in usuario.getPermissions():
+        nav = navegacao('Rifas', "user")
+    
 
     context = {
         'user': username,
-        'navegacao': navegacao('Rifas'),
+        'navegacao': nav,
         'campanhas': check_campanhas() or None,
         'rifas': check_rifas() or None
     }

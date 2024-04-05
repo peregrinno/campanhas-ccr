@@ -6,10 +6,18 @@ from . import pessoas_blueprint
 @login_required
 def pag_pessoas():
     username = request.cookies.get('username')
+    user_id = request.cookies.get('user_id')
+    
+    usuario = User.query.get_or_404(user_id)
+    
+    if {"admin": "sudo"} in usuario.getPermissions():
+        nav = navegacao('Pessoas', "admin")
+    elif {"user": "permissoes padrao"} in usuario.getPermissions():
+        nav = navegacao('Pessoas', "user")
     
     context = {
        'user': username,
-       'navegacao': navegacao('Pessoas')
+       'navegacao': nav
     }
     
     return render_template('templates-privados/pessoas.html', context=context)

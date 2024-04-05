@@ -24,7 +24,7 @@ def create_default_user():
 
     if not existing_user:
         # Se o usuário não existir, cria um novo usuário padrão
-        default_user = User(username='admin', email='admin@administrador.com', password='adminpassword')
+        default_user = User(username='admin', email='admin@administrador.com', password='adminpassword', permissions={"admin":"sudo"})
         db.session.add(default_user)
         db.session.commit()
     
@@ -53,14 +53,24 @@ def login_required(f):
 
     return decorated_function
 
-def navegacao(pagina):
+def navegacao(pagina, rule):
     # 'NOME DA PAGINA NO FRONT' : ['ROTA DA PAGINA', 'PAGINA ATIVA OU NÃO']
-    paginas = {
-        'Inicio': ['index', ''],
-        'Campanhas': ['campanhas.pag_campanhas',''],
-        'Rifas': ['rifas.pag_rifas',''],
-        'Pessoas': ['pessoas.pag_pessoas',''],
-    }
+    
+    if rule == "admin":
+        paginas = {
+            'Inicio': ['index', ''],
+            'Campanhas': ['campanhas.pag_campanhas',''],
+            'Rifas': ['rifas.pag_rifas',''],
+            'Pessoas': ['pessoas.pag_pessoas',''],
+            'Admin': ['admin.pag_admin','']
+        }
+    elif rule == "user":
+        paginas = {
+            'Inicio': ['index', ''],
+            'Campanhas': ['campanhas.pag_campanhas',''],
+            'Rifas': ['rifas.pag_rifas',''],
+            'Pessoas': ['pessoas.pag_pessoas',''],
+        }
     
     paginas[f'{pagina}'][1] = 'uk-active'
     

@@ -27,11 +27,11 @@ class User(db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     permissions = db.Column(db.JSON, nullable=True)
 
-    def __init__(self, username, email, password, permissions=None):
+    def __init__(self, username, email, password, permissions):
         self.username = username
         self.email = email
         self.set_password(password)
-        self.permissions = permissions
+        self.add_permission(permissions)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -43,6 +43,23 @@ class User(db.Model):
         if self.permissions is None:
             self.permissions = []
         self.permissions.append(permission)
+    
+    def isAdmin(self, user_id):
+        if self.id == user_id:
+            if {"admin":"sudo"} in self.permissions:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def getPermissions(self):
+        permissoes = []
+        for permission in self.permissions:
+            permissoes.append(permission)
+
+        return permissoes
+            
 
     def to_dict(self):
         return {

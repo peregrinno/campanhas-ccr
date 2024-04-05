@@ -6,10 +6,19 @@ from . import campanhas_blueprint
 @login_required
 def pag_campanhas():
     username = request.cookies.get('username')
+    user_id = request.cookies.get('user_id')
+    
+    usuario = User.query.get_or_404(user_id)
+    
+    if {"admin": "sudo"} in usuario.getPermissions():
+        nav = navegacao('Campanhas', "admin")
+    elif {"user": "permissoes padrao"} in usuario.getPermissions():
+        nav = navegacao('Campanhas', "user")
+    
     tipos = DimTipoCampanha.query.all()
     context = {
        'user': username,
-       'navegacao': navegacao('Campanhas'),
+       'navegacao': nav,
        'tipos': tipos
     }
     

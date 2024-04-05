@@ -31,14 +31,22 @@ def login():
 @login_required
 def index():
     username = request.cookies.get('username')
+    user_id = request.cookies.get('user_id')
     
     total_pessoas = Pessoa.query.count() or 0
     total_campanhas = Campanha.query.count() or 0
     total_metas = db.session.query(func.sum(Campanha.meta)).scalar() or 0
     
+    usuario = User.query.get_or_404(user_id)
+    
+    if {"admin": "sudo"} in usuario.getPermissions():
+        nav = navegacao('Inicio', "admin")
+    elif {"user": "permissoes padrao"} in usuario.getPermissions():
+        nav = navegacao('Inicio', "user")
+    
     context = {
         'user': username,
-        'navegacao': navegacao('Inicio'),
+        'navegacao': nav,
         'total_pessoas' : total_pessoas,
         'total_campanhas' : total_campanhas,
         'total_metas' : total_metas,
@@ -91,10 +99,11 @@ app.register_blueprint(pessoas_blueprint, url_prefix='/pessoas')
 app.register_blueprint(campanhas_blueprint, url_prefix='/campanhas')
 app.register_blueprint(rifas_blueprint, url_prefix='/rifas')
 app.register_blueprint(dimensoes_blueprint, url_prefix='/dimensoes')
+app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
 if __name__ == '__main__':
     # Executa as migrações antes de iniciar o aplicativo
-    #run_migrations()
+    run_migrations()
     
     app.run(debug=True, port=os.getenv("PORT", default=5000), use_reloader=True)
     
